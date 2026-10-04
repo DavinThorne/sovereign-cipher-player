@@ -18,6 +18,8 @@
     show("documentCard", false);
     show("noticeCard", false);
     show("cipherCard", false);
+    show("analysisCard", false);
+    show("translationCard", false);
     show("clueCard", false);
     show("dateBlock", false);
     show("seriesBlock", false);
@@ -27,6 +29,10 @@
     el("investigation").textContent = "";
     el("notice").textContent = "";
     el("ciphertext").textContent = "";
+    el("analysisResult").textContent = "";
+    el("analysisText").textContent = "";
+    el("translationTier").textContent = "";
+    el("translationText").textContent = "";
     el("clues").textContent = "";
   }
 
@@ -70,10 +76,36 @@
     if (state.ciphertext) el("ciphertext").textContent = state.ciphertext;
 
     const clues = Array.isArray(state.clues) ? state.clues : [];
-    show("clueCard", clues.length > 0);
+    const legacy = [];
+    let analysis = null;
+    let translation = null;
+
+    for (const clue of clues) {
+      if (clue && typeof clue === "object" && clue.kind === "investigation") {
+        analysis = clue;
+      } else if (clue && typeof clue === "object" && clue.kind === "translation") {
+        translation = clue;
+      } else {
+        legacy.push(clue);
+      }
+    }
+
+    show("analysisCard", !!analysis);
+    if (analysis) {
+      el("analysisResult").textContent = analysis.result || "Investigation clue";
+      el("analysisText").textContent = analysis.text || "No additional reliable deduction was released.";
+    }
+
+    show("translationCard", !!translation && !!translation.text);
+    if (translation && translation.text) {
+      el("translationTier").textContent = `${translation.tier || "Partial"} translation`;
+      el("translationText").textContent = translation.text;
+    }
+
+    show("clueCard", legacy.length > 0);
     const list = el("clues");
     list.textContent = "";
-    for (const clue of clues) {
+    for (const clue of legacy) {
       const li = document.createElement("li");
       li.textContent = String(clue);
       list.appendChild(li);

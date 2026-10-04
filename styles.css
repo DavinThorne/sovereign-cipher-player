@@ -32,3 +32,5 @@ ol{margin:12px 0 0;padding-left:24px}li{margin:8px 0;line-height:1.45}
 .state-card{padding:22px;text-align:center}
 .state-card h2{margin:6px 0;color:var(--text)}
 .state-message{color:var(--muted);line-height:1.5;max-width:620px;margin:0 auto}
+
+.reveal-text{margin-top:12px;line-height:1.55;white-space:pre-wrap}.translation-emphasis{color:var(--brass)}
