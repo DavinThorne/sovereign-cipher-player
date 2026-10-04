@@ -1,0 +1,30 @@
+:root{
+  color-scheme:dark;
+  --bg:#090A0B; --panel:#121417; --panel2:#191C20; --input:#060708;
+  --border:#34383E; --text:#EEE8DC; --muted:#A6A4A0;
+  --brass:#B99755; --brass2:#786233; --success:#6F9B7B; --error:#B05C64;
+}
+*{box-sizing:border-box}
+html,body{margin:0;min-height:100%;background:var(--bg);color:var(--text);font-family:"Segoe UI",system-ui,sans-serif}
+.shell{max-width:980px;margin:0 auto;padding:22px 18px 48px}
+header{text-align:center}.kicker{font-size:10px;color:var(--muted);font-weight:700;letter-spacing:.16em}
+h1{font-size:30px;margin:3px 0 0}.subtitle{color:var(--brass);font-size:11px;font-weight:700;letter-spacing:.04em;margin-top:4px}
+.rule{height:2px;background:var(--brass2);margin:14px 0 18px}
+.document-card,.content-card,.notice-card,.connection-card{border:1px solid var(--border);background:var(--panel);border-radius:12px}
+.document-card{padding:18px}.eyebrow{font-size:10px;font-weight:800;color:var(--brass);letter-spacing:.08em}
+h2{font-size:21px;margin:4px 0 14px}
+.metadata{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+.metadata>div{background:var(--panel2);border:1px solid var(--border);border-radius:9px;padding:10px 12px}
+.metadata span{display:block;color:var(--muted);font-size:9px;font-weight:800;letter-spacing:.06em}
+.metadata strong{display:block;margin-top:3px;font-size:15px}
+.content-card,.notice-card{margin-top:12px;padding:16px}.minor{font-size:11px;color:var(--muted);margin-top:2px}
+pre{white-space:pre-wrap;overflow-wrap:anywhere;background:var(--input);border-radius:9px;padding:14px;margin:12px 0 0;font:15px/1.65 Consolas,monospace;color:var(--text)}
+ol{margin:12px 0 0;padding-left:24px}li{margin:8px 0;line-height:1.45}
+.connection-card{margin-top:12px;padding:11px 14px;display:flex;align-items:center;gap:9px;color:var(--muted);font-size:11px}
+.dot{width:9px;height:9px;border-radius:50%;background:var(--error);flex:none}.dot.online{background:var(--success)}
+.update-mark{margin-left:auto;color:var(--brass);font-size:9px;font-weight:800;letter-spacing:.05em}
+@media(max-width:620px){
+  .shell{padding:16px 12px 36px}h1{font-size:25px}
+  .metadata{grid-template-columns:1fr}.content-card,.notice-card,.document-card{padding:14px}
+  pre{font-size:14px}
+}

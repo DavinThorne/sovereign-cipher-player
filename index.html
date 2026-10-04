@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#090A0B">
+  <title>Sovereign Cipher — Player Desk</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <main class="shell">
+    <header>
+      <div class="kicker">PLAYER CIPHER DESK</div>
+      <h1>SOVEREIGN CIPHER</h1>
+      <div class="subtitle">SECURE CORRESPONDENCE • INVESTIGATION WORKSPACE</div>
+      <div class="rule"></div>
+    </header>
+
+    <section class="document-card">
+      <div class="eyebrow">ACTIVE DOCUMENT</div>
+      <h2 id="documentTitle">Waiting for DM Console…</h2>
+      <div class="metadata">
+        <div id="dateBlock" hidden>
+          <span>DOCUMENT DATE</span>
+          <strong id="documentDate"></strong>
+        </div>
+        <div id="seriesBlock" hidden>
+          <span>SERIES</span>
+          <strong id="series"></strong>
+        </div>
+        <div id="investigationBlock" hidden>
+          <span>INVESTIGATION</span>
+          <strong id="investigation"></strong>
+        </div>
+      </div>
+    </section>
+
+    <section id="noticeCard" class="notice-card" hidden>
+      <div class="eyebrow">DM NOTICE</div>
+      <div id="notice"></div>
+    </section>
+
+    <section id="cipherCard" class="content-card" hidden>
+      <div class="section-head">
+        <div>
+          <div class="eyebrow">CIPHERTEXT</div>
+          <div class="minor">Player-visible transcription</div>
+        </div>
+      </div>
+      <pre id="ciphertext"></pre>
+    </section>
+
+    <section id="clueCard" class="content-card" hidden>
+      <div class="section-head">
+        <div>
+          <div class="eyebrow">CLUES RECOVERED</div>
+          <div class="minor">Only information released by the DM Console appears here.</div>
+        </div>
+      </div>
+      <ol id="clues"></ol>
+    </section>
+
+    <section class="connection-card">
+      <span id="connectionDot" class="dot"></span>
+      <span id="connectionText">Connecting to DM Console…</span>
+      <span id="updateMark" class="update-mark" hidden>NEW INFORMATION</span>
+    </section>
+  </main>
+
+  <script src="config.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
