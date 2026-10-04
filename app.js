@@ -14,7 +14,43 @@
     el(id).hidden = !value;
   }
 
+  function clearPlayerPayload() {
+    show("documentCard", false);
+    show("noticeCard", false);
+    show("cipherCard", false);
+    show("clueCard", false);
+    show("dateBlock", false);
+    show("seriesBlock", false);
+    show("investigationBlock", false);
+    el("documentDate").textContent = "";
+    el("series").textContent = "";
+    el("investigation").textContent = "";
+    el("notice").textContent = "";
+    el("ciphertext").textContent = "";
+    el("clues").textContent = "";
+  }
+
+  function renderUnavailable(kind, message) {
+    clearPlayerPayload();
+    show("sessionStateCard", true);
+
+    if (kind === "closed") {
+      el("sessionStateTitle").textContent = "SESSION ENDED";
+      el("sessionStateMessage").textContent =
+        message || "This Player Desk link is no longer active.";
+    } else {
+      el("sessionStateTitle").textContent = "DM CONSOLE OFFLINE";
+      el("sessionStateMessage").textContent =
+        message || "The DM Console is not currently connected. Waiting for it to reconnect.";
+    }
+
+    el("connectionDot").classList.remove("online");
+  }
+
   function render(state) {
+    show("sessionStateCard", false);
+    show("documentCard", true);
+
     el("documentTitle").textContent = state.document_title || "Untitled Cipher Document";
 
     show("dateBlock", !!state.display_date);
@@ -56,7 +92,7 @@
       `/api/state?session=${encodeURIComponent(session)}`,
       {cache:"no-store"}
     );
-    if (!response.ok) throw new Error("Session unavailable.");
+    if (!response.ok) throw new Error("Local DM Console unavailable.");
     return await response.json();
   }
 
@@ -84,7 +120,7 @@
 
     const payload = await response.json();
     if (!Array.isArray(payload) || payload.length === 0) {
-      throw new Error("Session not found or not yet published.");
+      throw new Error("Session not found or not yet started.");
     }
     return payload[0];
   }
@@ -93,7 +129,8 @@
     if (stopped) return;
 
     if (!session) {
-      el("connectionText").textContent = "No Player Desk session code was provided.";
+      renderUnavailable("closed", "No Player Desk session code was provided.");
+      el("connectionText").textContent = "No session code";
       return;
     }
 
@@ -102,14 +139,21 @@
         ? await fetchOnlineState()
         : await fetchLocalState();
 
-      render(state);
-      el("connectionDot").classList.add("online");
-      el("connectionText").textContent =
-        transport === "online"
-          ? "Connected to Online DM Console"
-          : "Connected to Local DM Console";
+      if (transport === "online" && state.is_live !== true) {
+        const kind = state.session_state === "closed" ? "closed" : "offline";
+        renderUnavailable(kind);
+        el("connectionText").textContent =
+          kind === "closed" ? "Session ended" : "DM Console offline";
+      } else {
+        render(state);
+        el("connectionDot").classList.add("online");
+        el("connectionText").textContent =
+          transport === "online"
+            ? "Connected to Online DM Console"
+            : "Connected to Local DM Console";
+      }
     } catch (err) {
-      el("connectionDot").classList.remove("online");
+      renderUnavailable("offline");
       el("connectionText").textContent = err.message || "Waiting for DM Console…";
     }
 
