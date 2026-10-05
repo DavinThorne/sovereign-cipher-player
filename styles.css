@@ -37,3 +37,12 @@ ol{margin:12px 0 0;padding-left:24px}li{margin:8px 0;line-height:1.45}
 
 .document-prose-card{padding-top:18px;padding-bottom:18px}
 .document-prose{white-space:pre-wrap;line-height:1.65;font-size:15px;color:var(--text)}
+
+.findings-list{display:flex;flex-direction:column;gap:10px;margin-top:12px}
+.finding-card{background:var(--input);border:1px solid var(--border);border-radius:9px;padding:12px 14px}
+.finding-card.latest{border-color:var(--brass2)}
+.finding-head{display:flex;align-items:center;justify-content:space-between;gap:12px}
+.finding-head strong{font-size:12px;color:var(--text)}
+.finding-badge{font-size:9px;letter-spacing:.07em;font-weight:800;color:var(--brass)}
+.finding-meta{font-size:10px;color:var(--muted);margin-top:3px}
+.finding-text{font-size:14px;line-height:1.55;margin-top:8px;white-space:pre-wrap}

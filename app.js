@@ -9,39 +9,27 @@
   let stopped = false;
 
   const el = id => document.getElementById(id);
-
-  function show(id, value) {
-    el(id).hidden = !value;
-  }
+  const show = (id, value) => { el(id).hidden = !value; };
 
   function clearPlayerPayload() {
-    show("documentCard", false);
-    show("documentTextCard", false);
-    show("noticeCard", false);
-    show("cipherCard", false);
-    show("analysisCard", false);
-    show("translationCard", false);
-    show("clueCard", false);
-    show("dateBlock", false);
-    show("seriesBlock", false);
-    show("investigationBlock", false);
-    el("documentDate").textContent = "";
-    el("series").textContent = "";
-    el("investigation").textContent = "";
-    el("documentText").textContent = "";
-    el("notice").textContent = "";
-    el("ciphertext").textContent = "";
-    el("analysisResult").textContent = "";
-    el("analysisText").textContent = "";
-    el("translationTier").textContent = "";
-    el("translationText").textContent = "";
+    for (const id of [
+      "documentCard","documentTextCard","noticeCard","cipherCard",
+      "analysisCard","translationCard","clueCard",
+      "dateBlock","seriesBlock","investigationBlock"
+    ]) show(id, false);
+
+    for (const id of [
+      "documentDate","series","investigation","documentText","notice",
+      "ciphertext","translationTier","translationText"
+    ]) el(id).textContent = "";
+
+    el("analysisList").textContent = "";
     el("clues").textContent = "";
   }
 
   function renderUnavailable(kind, message) {
     clearPlayerPayload();
     show("sessionStateCard", true);
-
     if (kind === "closed") {
       el("sessionStateTitle").textContent = "SESSION ENDED";
       el("sessionStateMessage").textContent =
@@ -51,8 +39,44 @@
       el("sessionStateMessage").textContent =
         message || "The DM Console is not currently connected. Waiting for it to reconnect.";
     }
-
     el("connectionDot").classList.remove("online");
+  }
+
+  function renderFindingCard(finding, index, isLatest) {
+    const card = document.createElement("article");
+    card.className = "finding-card" + (isLatest ? " latest" : "");
+
+    const head = document.createElement("div");
+    head.className = "finding-head";
+
+    const title = document.createElement("strong");
+    title.textContent = `Finding ${finding.sequence || index + 1}`;
+    head.appendChild(title);
+
+    if (isLatest) {
+      const badge = document.createElement("span");
+      badge.className = "finding-badge";
+      badge.textContent = "LATEST";
+      head.appendChild(badge);
+    }
+
+    card.appendChild(head);
+
+    const meta = document.createElement("div");
+    meta.className = "finding-meta";
+    const pieces = [];
+    if (Number.isInteger(finding.effective_score)) pieces.push(`Investigation ${finding.effective_score}`);
+    if (finding.result) pieces.push(finding.result);
+    if (finding.new_information === false) pieces.push("No new finding");
+    meta.textContent = pieces.join(" • ");
+    card.appendChild(meta);
+
+    const body = document.createElement("div");
+    body.className = "finding-text";
+    body.textContent = finding.text || "No additional reliable conclusion was established.";
+    card.appendChild(body);
+
+    return card;
   }
 
   function render(state) {
@@ -81,25 +105,26 @@
     if (state.ciphertext) el("ciphertext").textContent = state.ciphertext;
 
     const clues = Array.isArray(state.clues) ? state.clues : [];
+    const findings = [];
     const legacy = [];
-    let analysis = null;
     let translation = null;
 
-    for (const clue of clues) {
-      if (clue && typeof clue === "object" && clue.kind === "investigation") {
-        analysis = clue;
-      } else if (clue && typeof clue === "object" && clue.kind === "translation") {
-        translation = clue;
+    for (const item of clues) {
+      if (item && typeof item === "object" && item.kind === "investigation") {
+        findings.push(item);
+      } else if (item && typeof item === "object" && item.kind === "translation") {
+        translation = item;
       } else {
-        legacy.push(clue);
+        legacy.push(item);
       }
     }
 
-    show("analysisCard", !!analysis);
-    if (analysis) {
-      el("analysisResult").textContent = analysis.result || "Investigation clue";
-      el("analysisText").textContent = analysis.text || "No additional reliable deduction was released.";
-    }
+    show("analysisCard", findings.length > 0);
+    const list = el("analysisList");
+    list.textContent = "";
+    findings.forEach((finding, index) => {
+      list.appendChild(renderFindingCard(finding, index, index === findings.length - 1));
+    });
 
     show("translationCard", !!translation && !!translation.text);
     if (translation && translation.text) {
@@ -108,12 +133,12 @@
     }
 
     show("clueCard", legacy.length > 0);
-    const list = el("clues");
-    list.textContent = "";
+    const legacyList = el("clues");
+    legacyList.textContent = "";
     for (const clue of legacy) {
       const li = document.createElement("li");
       li.textContent = String(clue);
-      list.appendChild(li);
+      legacyList.appendChild(li);
     }
 
     if (lastRevision !== null && state.revision !== lastRevision) {
@@ -136,9 +161,7 @@
   async function fetchOnlineState() {
     const url = String(online.supabaseUrl || "").replace(/\/+$/, "");
     const key = String(online.publishableKey || "");
-    if (!url || !key) {
-      throw new Error("Online Player Desk has not been configured.");
-    }
+    if (!url || !key) throw new Error("Online Player Desk has not been configured.");
 
     const response = await fetch(
       `${url}/rest/v1/rpc/get_sovereign_player_session`,
