@@ -34,3 +34,6 @@ ol{margin:12px 0 0;padding-left:24px}li{margin:8px 0;line-height:1.45}
 .state-message{color:var(--muted);line-height:1.5;max-width:620px;margin:0 auto}
 
 .reveal-text{margin-top:12px;line-height:1.55;white-space:pre-wrap}.translation-emphasis{color:var(--brass)}
+
+.document-prose-card{padding-top:18px;padding-bottom:18px}
+.document-prose{white-space:pre-wrap;line-height:1.65;font-size:15px;color:var(--text)}

@@ -16,6 +16,7 @@
 
   function clearPlayerPayload() {
     show("documentCard", false);
+    show("documentTextCard", false);
     show("noticeCard", false);
     show("cipherCard", false);
     show("analysisCard", false);
@@ -27,6 +28,7 @@
     el("documentDate").textContent = "";
     el("series").textContent = "";
     el("investigation").textContent = "";
+    el("documentText").textContent = "";
     el("notice").textContent = "";
     el("ciphertext").textContent = "";
     el("analysisResult").textContent = "";
@@ -68,6 +70,9 @@
     const hasInvestigation = Number.isInteger(state.investigation);
     show("investigationBlock", hasInvestigation);
     if (hasInvestigation) el("investigation").textContent = String(state.investigation);
+
+    show("documentTextCard", !!state.visible_document_text);
+    if (state.visible_document_text) el("documentText").textContent = state.visible_document_text;
 
     show("noticeCard", !!state.notice);
     if (state.notice) el("notice").textContent = state.notice;
