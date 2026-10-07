@@ -20,7 +20,7 @@
 
     for (const id of [
       "documentDate","series","investigation","documentText","notice",
-      "ciphertext","translationTier","translationText"
+      "ciphertext","translationTier","translationCiphertext","translationRecovered","translationProgress"
     ]) el(id).textContent = "";
 
     el("analysisList").textContent = "";
@@ -112,7 +112,7 @@
     for (const item of clues) {
       if (item && typeof item === "object" && item.kind === "investigation") {
         findings.push(item);
-      } else if (item && typeof item === "object" && item.kind === "translation") {
+      } else if (item && typeof item === "object" && item.kind === "translation_mask") {
         translation = item;
       } else {
         legacy.push(item);
@@ -126,10 +126,18 @@
       list.appendChild(renderFindingCard(finding, index, index === findings.length - 1));
     });
 
-    show("translationCard", !!translation && !!translation.text);
-    if (translation && translation.text) {
-      el("translationTier").textContent = `${translation.tier || "Partial"} translation`;
-      el("translationText").textContent = translation.text;
+    const hasTranslation = !!translation && !!translation.recovered_plaintext;
+    show("translationCard", hasTranslation);
+    if (hasTranslation) {
+      const block = Number.isInteger(translation.block_size) ? translation.block_size : "?";
+      el("translationTier").textContent =
+        `${translation.tier || "Partial"} • Cargo Block size ${block}`;
+      el("translationCiphertext").textContent = translation.ciphertext || state.ciphertext || "";
+      el("translationRecovered").textContent = translation.recovered_plaintext || "";
+      const revealed = Number.isInteger(translation.revealed_count) ? translation.revealed_count : 0;
+      const total = Number.isInteger(translation.total_count) ? translation.total_count : 0;
+      el("translationProgress").textContent =
+        total > 0 ? `${revealed} of ${total} plaintext characters recovered` : "";
     }
 
     show("clueCard", legacy.length > 0);

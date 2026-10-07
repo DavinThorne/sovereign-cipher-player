@@ -46,3 +46,26 @@ ol{margin:12px 0 0;padding-left:24px}li{margin:8px 0;line-height:1.45}
 .finding-badge{font-size:9px;letter-spacing:.07em;font-weight:800;color:var(--brass)}
 .finding-meta{font-size:10px;color:var(--muted);margin-top:3px}
 .finding-text{font-size:14px;line-height:1.55;margin-top:8px;white-space:pre-wrap}
+
+.translation-card .translation-label{
+  margin-top:12px;
+  color:var(--muted);
+  font-size:9px;
+  font-weight:800;
+  letter-spacing:.07em
+}
+.translation-line{
+  margin-top:5px;
+  overflow-wrap:normal;
+  word-break:normal;
+  white-space:pre-wrap
+}
+.recovered-line{
+  color:var(--text);
+  letter-spacing:.02em
+}
+.translation-progress{
+  margin-top:8px;
+  color:var(--muted);
+  font-size:10px
+}

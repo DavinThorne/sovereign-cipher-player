@@ -70,14 +70,18 @@
       <div id="analysisList" class="findings-list"></div>
     </section>
 
-    <section id="translationCard" class="content-card" hidden>
+    <section id="translationCard" class="content-card translation-card" hidden>
       <div class="section-head">
         <div>
-          <div class="eyebrow">TRANSLATION</div>
+          <div class="eyebrow">RECOVERED TRANSLATION</div>
           <div id="translationTier" class="minor"></div>
         </div>
       </div>
-      <pre id="translationText"></pre>
+      <div class="translation-label">CIPHERTEXT</div>
+      <pre id="translationCiphertext" class="translation-line"></pre>
+      <div class="translation-label">RECOVERED PLAINTEXT — GROUPED TO CARGO BLOCKS</div>
+      <pre id="translationRecovered" class="translation-line recovered-line"></pre>
+      <div id="translationProgress" class="translation-progress"></div>
     </section>
 
     <section id="clueCard" class="content-card" hidden>
